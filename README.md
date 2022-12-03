@@ -6,20 +6,19 @@
 [![Build](https://github.com/koide3/hdl_graph_slam/actions/workflows/build.yml/badge.svg)](https://github.com/koide3/hdl_graph_slam/actions/workflows/build.yml) on melodic & noetic
 
 ## Nodelets
-***hdl_graph_slam*** consists of four nodelets.
+***hdl_graph_slam*** は4つのnodeletsからなる．
 
 - *prefiltering_nodelet*
 - *scan_matching_odometry_nodelet*
 - *floor_detection_nodelet*
 - *hdl_graph_slam_nodelet*
 
-The input point cloud is first downsampled by *prefiltering_nodelet*, and then passed to the next nodelets. While *scan_matching_odometry_nodelet* estimates the sensor pose by iteratively applying a scan matching between consecutive frames (i.e., odometry estimation), *floor_detection_nodelet* detects floor planes by RANSAC. The estimated odometry and the detected floor planes are sent to *hdl_graph_slam*. To compensate the accumulated error of the scan matching, it performs loop detection and optimizes a pose graph which takes various constraints into account.
+入力された点群は，まず*prefiltering_nodelet*によってダウンサンプルされ，次のnodeletsに渡される．*scan_matching_odometry_nodelet* が連続するフレーム間のスキャンマッチングを繰り返し適用してセンサーの姿勢を推定する（オドメトリ推定）のに対し，*floor_detection_nodelet*はRANSAC により床面を検出する．推定されたオドメトリと検出された床面は*hdl_graph_slam*に送られる．スキャンマッチングの累積誤差を補正するために，ループ検出を行い，様々な制約を考慮したポーズグラフを最適化する．
 
 <img src="imgs/nodelets.png" width="712pix" />
 
 ## Constraints (Edges)
-
-You can enable/disable each constraint by changing params in the launch file, and you can also change the weight (\*_stddev) and the robust kernel (\*_robust_kernel) of each constraint.
+起動ファイルのparamsを変更することで各制約の有効/無効を切り替えられるほか，各制約の重み（ \*_stddev ）とロバストカーネル（ \*_robust_kernel ）を変更することも可能．
 
 - ***Odometry***
 
@@ -29,6 +28,8 @@ You can enable/disable each constraint by changing params in the launch file, an
   - */gps/geopoint* (geographic_msgs/GeoPointStamped)
   - */gps/navsat* (sensor_msgs/NavSatFix)
   - */gpsimu_driver/nmea_sentence* (nmea_msgs/Sentence)
+
+hdl_graph_slam supports several GPS message types. All the supported types contain (latitude, longitude, and altitude). hdl_graph_slam converts them into [the UTM coordinate](http://wiki.ros.org/geodesy), and adds them into the graph as 3D position constraints. If altitude is set to NaN, the GPS data is treated as a 2D constrait. GeoPoint is the most basic one, which consists of only (lat, lon, alt). Although NavSatFix provides many information, we use only (lat, lon, alt) and ignore all other data. If you're using HDL32e, you can directly connect *hdl_graph_slam* with *velodyne_driver* via */gpsimu_driver/nmea_sentence*.
 
 hdl_graph_slam supports several GPS message types. All the supported types contain (latitude, longitude, and altitude). hdl_graph_slam converts them into [the UTM coordinate](http://wiki.ros.org/geodesy), and adds them into the graph as 3D position constraints. If altitude is set to NaN, the GPS data is treated as a 2D constrait. GeoPoint is the most basic one, which consists of only (lat, lon, alt). Although NavSatFix provides many information, we use only (lat, lon, alt) and ignore all other data. If you're using HDL32e, you can directly connect *hdl_graph_slam* with *velodyne_driver* via */gpsimu_driver/nmea_sentence*.
 
