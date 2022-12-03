@@ -1,24 +1,24 @@
 # hdl_graph_slam
-***hdl_graph_slam*** は3D LIDARを使用したリアルタイム6DOF SLAM用のオープンソースROSパッケージです．NDTスキャンマッチングに基づくオドメトリ推定とループ検出による3DグラフsLAMがベースである．また，GPS，IMU加速度 (重力ベクトル)，IMU姿勢 (磁器センサー)，床面 (点群での検出)など，複数のグラフ制約をサポートしています．このパッケージは，Velodyne社 (HDL32e，VLP16)およびRoboSense社 (16ch)のセンサーと屋内外の環境でテストしています．
+***hdl_graph_slam*** は3D LIDARを使用したリアルタイム6DOF SLAM用のオープンソースROSパッケージです。NDTスキャンマッチングに基づくオドメトリ推定とループ検出による3DグラフsLAMがベースとなります。また、GPS、IMU加速度 (重力ベクトル)，IMU姿勢 (磁器センサー)、床面 (点群での検出)など、複数のグラフ制約をサポートしています。このパッケージは、Velodyne社 (HDL32e、VLP16)およびRoboSense社 (16ch)のセンサーと屋内外の環境でテストされています。
 
 <img src="imgs/hdl_graph_slam.png" width="712pix" />
 
 [![Build](https://github.com/koide3/hdl_graph_slam/actions/workflows/build.yml/badge.svg)](https://github.com/koide3/hdl_graph_slam/actions/workflows/build.yml) on melodic & noetic
 
 ## Nodelets
-***hdl_graph_slam*** は4つのnodeletsからなる．
+***hdl_graph_slam*** は4つのnodeletsから構成されます。
 
 - *prefiltering_nodelet*
 - *scan_matching_odometry_nodelet*
 - *floor_detection_nodelet*
 - *hdl_graph_slam_nodelet*
 
-入力された点群は，まず*prefiltering_nodelet*によってダウンサンプルされ，次のnodeletsに渡される．*scan_matching_odometry_nodelet* が連続するフレーム間のスキャンマッチングを繰り返し適用してセンサーの姿勢を推定する（オドメトリ推定）のに対し，*floor_detection_nodelet*はRANSAC により床面を検出する．推定されたオドメトリと検出された床面は*hdl_graph_slam*に送られる．スキャンマッチングの累積誤差を補正するために，ループ検出を行い，様々な制約を考慮したポーズグラフを最適化する．
+入力された点群は、まず*prefiltering_nodelet*によってダウンサンプルされ、次のnodeletsに渡されます。*scan_matching_odometry_nodelet* が連続するフレーム間のスキャンマッチングを繰り返し適用してセンサーの姿勢を推定する (オドメトリ推定)のに対し、*floor_detection_nodelet*はRANSACにより床面を検出します。推定されたオドメトリと検出された床面は*hdl_graph_slam*に送られます。スキャンマッチングの累積誤差を補正するために、ループ検出を行い、様々な制約を考慮したポーズグラフを最適化します。
 
 <img src="imgs/nodelets.png" width="712pix" />
 
 ## Constraints (Edges)
-起動ファイルのparamsを変更することで各制約の有効/無効を切り替えられるほか，各制約の重み（ \*_stddev ）とロバストカーネル（ \*_robust_kernel ）を変更することも可能．
+起動ファイルのparamsを変更することで、各制約の有効/無効を切り替えられるほか、各制約の重み (\*_stddev)とロバストカーネル (\*_robust_kernel)を変更することも可能です．
 
 - ***Odometry***
 
@@ -29,29 +29,29 @@
   - */gps/navsat* (sensor_msgs/NavSatFix)
   - */gpsimu_driver/nmea_sentence* (nmea_msgs/Sentence)
 
-hdl_graph_slamはいくつかのGPSメッセージをサポートしています．サポートされるすべてのタイプは，（緯度、経度、高度）を含んでいます．hdl_graph_slamはそれらを[the UTM coordinate](http://wiki.ros.org/geodesy)に変換し, 3次元位置制約としてグラフに追加する．もし高度をNaNに設定した場合, GPSデータは2次元の座標として扱われます．GeoPointは最も基本的なもので，(lat, lon, alt)のみで構成されています．NavSatFixは多くの情報を提供していますが，ここでは(lat, lon, alt)のみを使用し，他のデータは無視する．HDL32eを使用している場合，*/gpsimu_driver/nmea_sentence*を介して*hdl_graph_slam*と*velodyne_driver*を直接接続することが可能である．
+hdl_graph_slamはいくつかのGPSメッセージをサポートしています。サポートされるすべてのタイプは、（緯度、経度、高度）を含んでいます。hdl_graph_slamはそれらを[the UTM coordinate](http://wiki.ros.org/geodesy)に変換し、3次元位置制約としてグラフに追加します。もし高度をNaNに設定した場合、GPSデータは2次元の座標として扱われます。GeoPointは最も基本的なもので、(lat、lon、alt)のみで構成されています。NavSatFixは多くの情報を提供していますが、ここでは(lat、lon、alt)のみを使用し、他のデータは無視します。HDL32eを使用している場合、*/gpsimu_driver/nmea_sentence*を介して*hdl_graph_slam*と*velodyne_driver*を直接接続することが可能です。
 
 - ***IMU acceleration (gravity vector)***
   - */gpsimu_driver/imu_data* (sensor_msgs/Imu)
 
-この制約により，各ポーズノードは，そのノードに関連する加速度ベクトルが垂直になるように（重力ベクトルとして）回転される．これはスキャンマッチングの累積チルト回転誤差を補正するのに有効である．センサーの動きによる加速度は無視するので，この制約に大きなウェイトを与えるべきではありません．
+この制約により各ポーズノードは、そのノードに関連する加速度ベクトルが垂直になるように（重力ベクトルとして）回転されます。これはスキャンマッチングの累積チルト回転誤差を補正するのに有効です。センサーの動きによる加速度は無視するため、この制約に大きなウェイトを与えるべきではありません．
 
 - ***IMU orientation (magnetic sensor)***
   - */gpsimu_driver/imu_data* (sensor_msgs/Imu)
 
 
-IMUに信頼性の高い磁気姿勢センサーが搭載されている場合，3D回転制約として姿勢データをグラフに追加することができます．ただし磁気姿勢センサーは，外部の磁気の影響を受けることがあります．そのような場合は，この制約を無効にする必要があります。
+IMUに信頼性の高い磁気姿勢センサーが搭載されている場合、3D回転制約として姿勢データをグラフに追加することができます。ただし磁気姿勢センサーは、外部の磁気の影響を受けることがあります。そのような場合は、この制約を無効にする必要があります。
 
 
 - ***Floor plane***
   - */floor_detection/floor_coeffs* (hdl_graph_slam/FloorCoeffs)
 
 
-この制約により，姿勢ノードの床面（RANSACで検出）が同じになるようにグラフを最適化する．これは広い平坦な屋内環境において，スキャンマッチングの累積回転誤差を補償するために設計されている．
+この制約により、姿勢ノードの床面 (RANSACで検出)が同じになるようにグラフを最適化します。これは広い平坦な屋内環境において、スキャンマッチングの累積回転誤差を補償するために設計されています。
 
 
 ## Parameters
-設定可能なパラメータは，*launch/hdl_graph_slam.launch*にrosparamsとしてリストアップされています．
+設定可能なパラメータは、*launch/hdl_graph_slam.launch*にrosparamsとしてリストアップされています。
 
 ## Services
 - */hdl_graph_slam/dump*  (hdl_graph_slam/DumpGraph)
@@ -60,14 +60,14 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
   - save the generated map as a PCD file.
 
 ## Requirements
-***hdl_graph_slam***は以下のライブラリを必要とします．
+***hdl_graph_slam***は以下のライブラリを必要とします。
 
 - OpenMP
 - PCL
 - g2o
 - suitesparse
 
-また以下のROSパッケージが必要です．
+また以下のROSパッケージが必要です。
 
 - geodesy
 - nmea_msgs
@@ -76,7 +76,7 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 - [fast_gicp](https://github.com/SMRT-AIST/fast_gicp)
 
 ```bash
-# for melodic
+# Melodic
 sudo apt-get install ros-melodic-geodesy ros-melodic-pcl-ros ros-melodic-nmea-msgs ros-melodic-libg2o
 cd catkin_ws/src
 git clone https://github.com/koide3/ndt_omp.git -b melodic
@@ -85,7 +85,7 @@ git clone https://github.com/koide3/hdl_graph_slam
 
 cd .. && catkin_make -DCMAKE_BUILD_TYPE=Release
 
-# for noetic
+# Noetic
 sudo apt-get install ros-noetic-geodesy ros-noetic-pcl-ros ros-noetic-nmea-msgs ros-noetic-libg2o
 
 cd catkin_ws/src
@@ -96,12 +96,12 @@ git clone https://github.com/koide3/hdl_graph_slam
 cd .. && catkin_make -DCMAKE_BUILD_TYPE=Release
 ```
 
-**[optional]** *bag_player.py* scriptはProgressBar2を必要とします.
+**[optional]** *bag_player.py* scriptはProgressBar2を必要とします。
 ```bash
 sudo pip install ProgressBar2
 ```
 
-## Example1 (Indoor)
+## 例1 (Indoor)
 
 Bag file (recorded in a small room):
 
@@ -122,23 +122,23 @@ rviz -d hdl_graph_slam.rviz
 rosbag play --clock hdl_501_filtered.bag
 ```
 
-また再生速度を自動的に調整し，可能な限り高速にデータを処理するbag_player.pyも提供しています．
+また再生速度を自動的に調整し、可能な限り高速にデータを処理するbag_player.pyも提供しています。
 
 ```bash
 rosrun hdl_graph_slam bag_player.py hdl_501_filtered.bag
 ```
 
-あなたは次のような点群が表示できる:
+以下のコマンドで、点群が表示できます:
 
 <img src="imgs/top.png" height="256pix" /> <img src="imgs/birds.png" height="256pix" />
 
-次のコマンドで，あなたは生成したマップを保存できる:
+以下のコマンドで、生成したマップを保存できます:
 ```bash
 rosservice call /hdl_graph_slam/save_map "resolution: 0.05
 destination: '/full_path_directory/map.pcd'"
 ```
 
-## Example2 (Outdoor)
+## 例2 (Outdoor)
 
 Bag file (recorded in an outdoor environment):
 - [hdl_400.bag.tar.gz](http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz) (raw data, about 900MB)
@@ -162,7 +162,7 @@ rosbag play --clock hdl_400.bag
 ## Example with GPS
 Ford Campus Vision and Lidar Data Set [\[URL\]](http://robots.engin.umich.edu/SoftwareData/Ford)
 
-以下のスクリプトは，Ford Lidar Datasetをrosbagに変換して再生します．この例では，***hdl_graph_slam***がGPSデータを利用して，ポーズグラフを補正しています．
+以下のスクリプトは、Ford Lidar Datasetをrosbagに変換して再生します。この例では、***hdl_graph_slam***がGPSデータを利用して、ポーズグラフを補正しています。
 
 ```bash
 cd IJRR-Dataset-2
@@ -174,9 +174,9 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
 
 ## Use hdl_graph_slam in your system
 
-1. static_transform_publisherを使用し，センサー（LIDAR，IMU，GPS）とシステムのbase_link間の変換を定義します（hdl_graph_slam.launchの行番号11を参照)．すべてのセンサデータは共通のbase_linkフレームに変換され，SLAMアルゴリズムに供給されます．
+1. static_transform_publisherを使用し、センサー (LIDAR，IMU，GPS)とシステムのbase_link間の変換を定義します (hdl_graph_slam.launchの行番号11を参照してください。)。すべてのセンサデータは共通のbase_linkフレームに変換され、SLAMアルゴリズムに供給されます．
  
-2. ***prefiltering_nodelet***の点群トピックをリマップします. 次のように:
+2. 以下の設定で、***prefiltering_nodelet***の点群トピックをリマップします:
 
 ```bash
   <node pkg="nodelet" type="nodelet" name="prefiltering_nodelet" ...
@@ -188,21 +188,21 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
 
 ### Parameter tuning guide
 
-マッピングの品質は，パラメータの設定に大きく依存します．特にスキャンマッチングパラメータは結果に大きな影響を与えます．以下の手順でパラメータをチューニングしてください．
+マッピングの品質は、パラメータの設定に大きく依存します。特にスキャンマッチングパラメータは結果に大きな影響を与えます。以下の手順でパラメータをチューニングしてください。
 
 - ***registration_method***
-  **[updated] 簡単には，ほとんどの場合はFAST_GICPを使用し，処理速度が重要な場合はFAST_VGICPかNDT_OMPを使うということです** このパラメータにより，オドメトリ推定とループ検出に使う登録方法を変更することができます．PCL1.7 (ROS kinetic)以前のGICPには，初期推測の処理にバグがあることに注意してください．**ROS kinecticまたはそれ以前のバージョンをお使いの場合は，GICPを使用しないでください**.
+  **[updated] 簡単には、ほとんどの場合はFAST_GICPを使用し、処理速度が重要な場合はFAST_VGICPかNDT_OMPを使うということです** このパラメータにより、オドメトリ推定とループ検出に使う登録方法を変更することができます。PCL1.7 (ROS kinetic)以前のGICPには、初期推測の処理にバグがあることに注意してください。**ROS kinecticまたはそれ以前のバージョンをお使いの場合は、GICPを使用しないでください**
   
 - ***ndt_resolution***
-このパラメータはNDTのボクセルサイズを決定します．通常，屋外環境では大きな値が適しています（屋内では 0.5 - 2.0 [m]、屋外では 2.0 - 10.0 [m]）．NDTまたはNDT_OMPを選択した場合は，このパラメータを微調整して，良好なオドメトリ推定結果を得ることができます．
+このパラメータはNDTのボクセルサイズを決定します。通常、屋外環境では大きな値が適しています(屋内では0.5 - 2.0 [m]、屋外では 2.0 - 10.0 [m])。NDTまたはNDT_OMPを選択した場合は、このパラメータを微調整して、良好なオドメトリ推定結果を得ることができます。
 
 - ***other parameters***
-  設定可能なパラメータは、全て起動ファイルで確認できます．起動ファイルのテンプレート（屋内用hdl_graph_slam_501.launch、屋外用hdl_graph_slam_400.launch）をコピーして，起動ファイル内のパラメータを微調整してアプリケーションに適応させることができます．
+設定可能なパラメータは、全て起動ファイルで確認できます。起動ファイルのテンプレート（屋内用hdl_graph_slam_501.launch、屋外用hdl_graph_slam_400.launch）をコピーして、起動ファイル内のパラメータを微調整してアプリケーションに適応させることができます。
 
 ## License
-このパッケージはBSD-2-Clause Licenseの下でリリースされています．
+このパッケージはBSD-2-Clause Licenseの下でリリースされています。
 
-g2oに含まれるcholmodソルバーはGPLの下でライセンスされていることに注意してください．GPLを回避するために，cholmodに依存しないg2oをビルドする必要があるかもしれません．
+g2oに含まれるcholmodソルバーはGPLの下でライセンスされていることに注意してください。GPLを回避するために、cholmodに依存しないg2oをビルドする必要があるかもしれません。
 
 
 ## Related packages
