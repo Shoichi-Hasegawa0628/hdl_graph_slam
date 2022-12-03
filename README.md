@@ -50,16 +50,16 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 この制約により、姿勢ノードの床面 (RANSACで検出)が同じになるようにグラフを最適化します。これは広い平坦な屋内環境において、スキャンマッチングの累積回転誤差を補償するために設計されています。
 
 
-## Parameters
+## ROSパラメータ
 設定可能なパラメータは、*launch/hdl_graph_slam.launch*にrosparamsとしてリストアップされています。
 
-## Services
+## ROSサービス
 - */hdl_graph_slam/dump*  (hdl_graph_slam/DumpGraph)
   - save all the internal data (point clouds, floor coeffs, odoms, and pose graph) to a directory.
 - */hdl_graph_slam/save_map*  (hdl_graph_slam/SaveMap)
   - save the generated map as a PCD file.
 
-## Requirements
+## 必要なもの
 ***hdl_graph_slam***は以下のライブラリを必要とします。
 
 - OpenMP
@@ -159,7 +159,7 @@ rosbag play --clock hdl_400.bag
 
 <img src="imgs/hdl_400_points.png" height="256pix" /> <img src="imgs/hdl_400_graph.png" height="256pix" />
 
-## Example with GPS
+## GPSを使用した例
 Ford Campus Vision and Lidar Data Set [\[URL\]](http://robots.engin.umich.edu/SoftwareData/Ford)
 
 以下のスクリプトは、Ford Lidar Datasetをrosbagに変換して再生します。この例では、***hdl_graph_slam***がGPSデータを利用して、ポーズグラフを補正しています。
@@ -172,7 +172,7 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
 
 <img src="imgs/ford1.png" height="200pix"/> <img src="imgs/ford2.png" height="200pix"/> <img src="imgs/ford3.png" height="200pix"/>
 
-## Use hdl_graph_slam in your system
+## 自身のシステムでhdl-graph-slamを使用
 
 1. static_transform_publisherを使用し、センサー (LIDAR，IMU，GPS)とシステムのbase_link間の変換を定義します (hdl_graph_slam.launchの行番号11を参照してください。)。すべてのセンサデータは共通のbase_linkフレームに変換され、SLAMアルゴリズムに供給されます．
  
@@ -184,9 +184,9 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
   ...
 ```
 
-## Common Problems
+## 共通の問題
 
-### Parameter tuning guide
+### パラメータの微調整について
 
 マッピングの品質は、パラメータの設定に大きく依存します。特にスキャンマッチングパラメータは結果に大きな影響を与えます。以下の手順でパラメータをチューニングしてください。
 
@@ -196,16 +196,16 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
 - ***ndt_resolution***
 このパラメータはNDTのボクセルサイズを決定します。通常、屋外環境では大きな値が適しています(屋内では0.5 - 2.0 [m]、屋外では 2.0 - 10.0 [m])。NDTまたはNDT_OMPを選択した場合は、このパラメータを微調整して、良好なオドメトリ推定結果を得ることができます。
 
-- ***other parameters***
+- ***他のパラメータ***
 設定可能なパラメータは、全て起動ファイルで確認できます。起動ファイルのテンプレート（屋内用hdl_graph_slam_501.launch、屋外用hdl_graph_slam_400.launch）をコピーして、起動ファイル内のパラメータを微調整してアプリケーションに適応させることができます。
 
-## License
+## ライセンス
 このパッケージはBSD-2-Clause Licenseの下でリリースされています。
 
 g2oに含まれるcholmodソルバーはGPLの下でライセンスされていることに注意してください。GPLを回避するために、cholmodに依存しないg2oをビルドする必要があるかもしれません。
 
 
-## Related packages
+## 関連パッケージ
 
 - [interactive_slam](https://github.com/koide3/interactive_slam)
 - [hdl_graph_slam](https://github.com/koide3/hdl_graph_slam)
