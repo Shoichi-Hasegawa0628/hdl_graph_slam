@@ -3,7 +3,7 @@
 [![Build](https://github.com/koide3/hdl_graph_slam/actions/workflows/build.yml/badge.svg)](https://github.com/koide3/hdl_graph_slam/actions/workflows/build.yml) on Melodic & Noetic
 
 *目次*  
-1. [システム概要](##システム概要)  
+1. [システム概要](##system)  
   
 2. [準備](##準備)  
   
@@ -14,7 +14,7 @@
 5. [関連リンク](##関連リンク)  
 
 
-## システム概要  
+## System
 ***hdl_graph_slam*** は3D LIDARを使用したリアルタイム6DOF SLAM用のオープンソースROSパッケージです。NDTスキャンマッチングに基づくオドメトリ推定とループ検出による3DグラフSLAMがベースとなります。また、GPS、IMU加速度 (重力ベクトル)，IMU姿勢 (磁器センサー)、床面 (点群での検出)など、複数のグラフ制約をサポートしています。このパッケージは、Velodyne社 (HDL32e、VLP16)およびRoboSense社 (16ch)のセンサーと屋内外の環境でテストされています。
 
 <img src="imgs/hdl_graph_slam.png" width="712pix" />
