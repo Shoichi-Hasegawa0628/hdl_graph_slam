@@ -64,18 +64,24 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 この制約により、姿勢ノードの床面 (RANSACで検出)が同じになるようにグラフを最適化します。これは広い平坦な屋内環境において、スキャンマッチングの累積回転誤差を補償するために設計されています。
 
 ### 1.1.3 ROS
-## ROSパラメータ
+- ROSパラメータ
 設定可能なROSパラメータは、*launch/hdl_graph_slam.launch*にrosparamsとしてリストアップされています。
 
-## ROSサービス
-- */hdl_graph_slam/dump*  (hdl_graph_slam/DumpGraph)
-  - save all the internal data (point clouds, floor coeffs, odoms, and pose graph) to a directory.
-- */hdl_graph_slam/save_map*  (hdl_graph_slam/SaveMap)
-  - save the generated map as a PCD file.
-
+- ROSサービス
+以下が設定されています。
+　- */hdl_graph_slam/dump*  (hdl_graph_slam/DumpGraph)
+ 　- フォルダに内部データ(point clouds, floor coeffs, odoms, and pose graph)を全て保存する。
+　- */hdl_graph_slam/save_map*  (hdl_graph_slam/SaveMap)
+ 　- PCD形式で生成した地図を保存する。
 
 ## 2. 環境構築 
 ### 2.1 動作保証環境
+***hdl_graph_slam***はDocker，Local PCでの2種類の環境構築を提供しています。
+#### Dockerでの環境構築
+
+
+#### Local PCでの環境構築 (動作確認済み)
+
 | Component | Requirement |
 | :-- | :-- |
 | OS | Ubuntu 18.04LTS, 20.04LTS |
@@ -132,14 +138,9 @@ cd .. && catkin_make -DCMAKE_BUILD_TYPE=Release
 sudo pip install ProgressBar2
 ~~~
 
-## システム利用手順  
+## 3. システム利用手順  
 
-## 動作確認  
-
-
-
-## 例1 (Indoor)
-
+### 3.1 例1 Indoor
 Bag file (recorded in a small room):
 
 - [hdl_501.bag.tar.gz](http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_501.bag.tar.gz) (raw data, 344MB)
@@ -175,8 +176,7 @@ rosservice call /hdl_graph_slam/save_map "resolution: 0.05
 destination: '/full_path_directory/map.pcd'"
 ```
 
-## 例2 (Outdoor)
-
+### 3.2 例2 Outdoor
 Bag file (recorded in an outdoor environment):
 - [hdl_400.bag.tar.gz](http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz) (raw data, about 900MB)
 
@@ -196,7 +196,7 @@ rosbag play --clock hdl_400.bag
 
 <img src="imgs/hdl_400_points.png" height="256pix" /> <img src="imgs/hdl_400_graph.png" height="256pix" />
 
-## GPSを使用した例
+### 3.3 GPSを使用した例
 Ford Campus Vision and Lidar Data Set [\[URL\]](http://robots.engin.umich.edu/SoftwareData/Ford)
 
 以下のスクリプトは、Ford Lidar Datasetをrosbagに変換して再生します。この例では、***hdl_graph_slam***がGPSデータを利用して、ポーズグラフを補正しています。
@@ -209,7 +209,7 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
 
 <img src="imgs/ford1.png" height="200pix"/> <img src="imgs/ford2.png" height="200pix"/> <img src="imgs/ford3.png" height="200pix"/>
 
-## 自身のシステムでhdl-graph-slamを使用
+### 3.4 自身のシステムでhdl-graph-slamを使用する場合
 
 1. static_transform_publisherを使用し、センサー (LIDAR，IMU，GPS)とシステムのbase_link間の変換を定義します (hdl_graph_slam.launchの行番号11を参照してください。)。すべてのセンサデータは共通のbase_linkフレームに変換され、SLAMアルゴリズムに供給されます．
  
@@ -221,12 +221,9 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
   ...
 ```
 
+### 3.5 パラメータのチューニングについて
 
-## 共通の問題
-
-### パラメータの微調整について
-
-マッピングの品質は、パラメータの設定に大きく依存します。特にスキャンマッチングパラメータは結果に大きな影響を与えます。以下の手順でパラメータをチューニングしてください。
+マッピングの品質はパラメータの設定に大きく依存します。特にスキャンマッチングパラメータは結果に大きな影響を与えます。以下の手順でパラメータをチューニングしてください。
 
 - ***registration_method***
   **[updated] 簡単には、ほとんどの場合はFAST_GICPを使用し、処理速度が重要な場合はFAST_VGICPかNDT_OMPを使うということです** このパラメータにより、オドメトリ推定とループ検出に使う登録方法を変更することができます。PCL1.7 (ROS kinetic)以前のGICPには、初期推測の処理にバグがあることに注意してください。**ROS kinecticまたはそれ以前のバージョンをお使いの場合は、GICPを使用しないでください**
@@ -238,14 +235,14 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
 設定可能なパラメータは、全て起動ファイルで確認できます。起動ファイルのテンプレート（屋内用hdl_graph_slam_501.launch、屋外用hdl_graph_slam_400.launch）をコピーして、起動ファイル内のパラメータを微調整してアプリケーションに適応させることができます。
 
 
-## 5. 関連リンク  
+## 4. 関連リンク  
 
-### 5.1 ライセンス
+### 4.1 ライセンス
 このパッケージはBSD-2-Clause Licenseの下でリリースされています。
 g2oに含まれるcholmodソルバーはGPLの下でライセンスされていることに注意してください。GPLを回避するために、cholmodに依存しないg2oをビルドする必要があるかもしれません。
 
 
-### 5.2 関連パッケージ
+### 4.2 関連パッケージ
 - [interactive_slam](https://github.com/koide3/interactive_slam)
 - [hdl_graph_slam](https://github.com/koide3/hdl_graph_slam)
 - [hdl_localization](https://github.com/koide3/hdl_localization)
@@ -253,10 +250,10 @@ g2oに含まれるcholmodソルバーはGPLの下でライセンスされてい�
 
 <img src="imgs/packages.png"/>
 
-### 5.3 関連論文
+### 4.3 関連論文
 Kenji Koide, Jun Miura, and Emanuele Menegatti, A Portable 3D LIDAR-based System for Long-term and Wide-area People Behavior Measurement, Advanced Robotic Systems, 2019 [[link]](https://www.researchgate.net/publication/331283709_A_Portable_3D_LIDAR-based_System_for_Long-term_and_Wide-area_People_Behavior_Measurement).
 
-### 5.4 連絡先
+### 4.4 連絡先
 Kenji Koide, k.koide@aist.go.jp, https://staff.aist.go.jp/k.koide
 
 Active Intelligent Systems Laboratory, Toyohashi University of Technology, Japan [\[URL\]](http://www.aisl.cs.tut.ac.jp)  
