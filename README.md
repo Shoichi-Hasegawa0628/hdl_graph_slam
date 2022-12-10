@@ -3,7 +3,7 @@
 [![Build](https://github.com/koide3/hdl_graph_slam/actions/workflows/build.yml/badge.svg)](https://github.com/koide3/hdl_graph_slam/actions/workflows/build.yml) on Melodic & Noetic
 
 *目次*  
-1. [システム概要](##system)  
+1. [システム概要](##システム概要)  
   
 2. [準備](##準備)  
   
@@ -14,7 +14,7 @@
 5. [関連リンク](##関連リンク)  
 
 
-## System
+## システム概要
 ***hdl_graph_slam*** は3D LIDARを使用したリアルタイム6DOF SLAM用のオープンソースROSパッケージです。NDTスキャンマッチングに基づくオドメトリ推定とループ検出による3DグラフSLAMがベースとなります。また、GPS、IMU加速度 (重力ベクトル)，IMU姿勢 (磁器センサー)、床面 (点群での検出)など、複数のグラフ制約をサポートしています。このパッケージは、Velodyne社 (HDL32e、VLP16)およびRoboSense社 (16ch)のセンサーと屋内外の環境でテストされています。
 
 <img src="imgs/hdl_graph_slam.png" width="712pix" />
@@ -64,10 +64,10 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 この制約により、姿勢ノードの床面 (RANSACで検出)が同じになるようにグラフを最適化します。これは広い平坦な屋内環境において、スキャンマッチングの累積回転誤差を補償するために設計されています。
 
 ### 1.1.3 ROS
-- ROSパラメータ
+- ROSパラメータ  
 設定可能なROSパラメータは、*launch/hdl_graph_slam.launch*にrosparamsとしてリストアップされています。
 
-- ROSサービス
+- ROSサービス  
 以下が設定されています。
 　- */hdl_graph_slam/dump*  (hdl_graph_slam/DumpGraph)
  　- フォルダに内部データ(point clouds, floor coeffs, odoms, and pose graph)を全て保存する。
