@@ -77,54 +77,7 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 ## 2. 環境構築 
 ### 2.1 動作保証環境
 ***hdl_graph_slam***は,
-- Docker(hdl_graph_slma用)とLocal環境のROS (rviz用)
-- Local PC
-での2種類の環境構築を提供しています。
-
-#### Dockerでの環境構築
-1. 好きなフォルダにこのリポジトリをクローン
-~~~
-git clone **
-~~~
-
-2. Dockerイメージのビルド
-~~~ 
-cd hdl_graph_slam/docker  
-./build.sh
-~~~
-
-3. Dockerコンテナを起動する
-~~~
-# Local PC (Terminal 1)
-roscore
-~~~
-
-~~~
-# Local PC (Terminal 2)
-rosparam set use_sim_time true
-
-cd hdl_graph_slam/rviz  
-rviz -d hdl_graph_slam.rviz
-~~~
-
-~~~
-# Local PC (Terminal 3)
-wget http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz
-tar -zxvf hdl_400.bag.tar.gz
-rosbag play --clock hdl_400.bag
-~~~
-
-~~~
-# Local PC (Terminal 4, Docker)
-cd hdl_graph_slam/docker
-./run.sh
-roslaunch hdl_graph_slam hdl_graph_slam_400.launch
-~~~
-
-![hdl_graph_slam](https://user-images.githubusercontent.com/31344317/98347836-4fed5a00-205b-11eb-931c-158f6cd056bf.gif)
-
-
-#### Local PCでの環境構築 (動作確認済み)
+Docker(hdl_graph_slma用)とLocal環境のROS(rviz用)で動作させることを想定しています。(Local環境のみでも動作は可能です。)
 
 | Component | Requirement |
 | :-- | :-- |
@@ -154,7 +107,7 @@ ROSパッケージ
 
 
 ### 2.3 セットアップ
-ROS Melodicの場合
+ROS Melodicの場合 (Local環境にROSをインストール後)
 ~~~
 sudo apt-get install ros-melodic-geodesy ros-melodic-pcl-ros ros-melodic-nmea-msgs ros-melodic-libg2o
 cd catkin_ws/src
@@ -165,7 +118,7 @@ git clone https://github.com/koide3/hdl_graph_slam
 cd .. && catkin_make -DCMAKE_BUILD_TYPE=Release
 ~~~
 
-ROS Noeticの場合
+ROS Noeticの場合 (Local環境にROSをインストール後)
 ~~~
 sudo apt-get install ros-noetic-geodesy ros-noetic-pcl-ros ros-noetic-nmea-msgs ros-noetic-libg2o
 
@@ -182,63 +135,154 @@ cd .. && catkin_make -DCMAKE_BUILD_TYPE=Release
 sudo pip install ProgressBar2
 ~~~
 
-## 3. システム利用手順  
 
-### 3.1 例1 Indoor
-Bag file (recorded in a small room):
+#### 実行手順
+1. 好きなフォルダにこのリポジトリをクローン
+~~~
+git clone **
+~~~
+
+2. Dockerイメージのビルド
+~~~ 
+cd hdl_graph_slam/docker  
+./build.sh
+~~~
+
+3. roscoreの起動
+~~~
+# Local PC (Terminal 1)
+roscore
+~~~
+
+4. Local環境でrvizの起動
+~~~
+# Local PC (Terminal 2、Local環境)
+rosparam set use_sim_time true
+
+cd hdl_graph_slam/rviz  
+rviz -d hdl_graph_slam.rviz
+~~~
+
+5. rosbagの再生
+~~~
+# Local PC (Terminal 3、Local環境)
+wget http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz
+tar -zxvf hdl_400.bag.tar.gz
+rosbag play --clock hdl_400.bag
+~~~
+
+6. Dockerコンテナを起動し、hdl_graph_slmaの起動
+~~~
+# Local PC (Terminal 4, Docker)
+cd hdl_graph_slam/docker
+./run.sh
+roslaunch hdl_graph_slam hdl_graph_slam_400.launch
+~~~
+
+Rvizでhdl_graph_slamが起動していることを確認できます。
+![hdl_graph_slam](https://user-images.githubusercontent.com/31344317/98347836-4fed5a00-205b-11eb-931c-158f6cd056bf.gif)
+
+
+## 3. システム利用手順
+hdl_graph_slamを利用するために、場面に応じたrosbagファイルをいくつか提供しています。
+ご参考にください。
+
+### 3.1 例1 屋内環境
+Rosbag file (recorded in a small room):
 
 - [hdl_501.bag.tar.gz](http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_501.bag.tar.gz) (raw data, 344MB)
 - [hdl_501_filtered.bag.tar.gz](http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_501_filtered.bag.tar.gz) (downsampled data, 57MB, **Recommended!**)
 
-```bash
+1. roscore
+~~~
+(Terminal 1, Local環境)
+roscore
+~~~
+
+2. Dockerコンテナの起動
+~~~
+(Terminal 2、Docker)
+cd hdl_graph_slam/docker
+./run.sh
+
 rosparam set use_sim_time true
 roslaunch hdl_graph_slam hdl_graph_slam_501.launch
-```
+~~~
 
-```bash
+3. rviz
+~~~
+(Terminal 3, Local環境)
 roscd hdl_graph_slam/rviz
 rviz -d hdl_graph_slam.rviz
-```
+~~~
 
-```bash
+4. rosbag再生
+~~~
+(Terminal 4, Local環境)
+wget http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_501_filtered.bag.tar.gz
+tar -zxvf hdl_501_filtered.bag.tar.gz
 rosbag play --clock hdl_501_filtered.bag
-```
 
-また再生速度を自動的に調整し、可能な限り高速にデータを処理するbag_player.pyも提供しています。
-
-```bash
+(また再生速度を自動的に調整し、可能な限り高速にデータを処理するbag_player.pyも提供しています。)
 rosrun hdl_graph_slam bag_player.py hdl_501_filtered.bag
-```
+~~~
 
-以下のコマンドで、点群が表示できます:
+5. 地図の保存
+以下のコマンドで、生成したマップを保存できます。
+root権限でmapは保存されるため、chmod 777 ./map.pcdで権限を変更できます。
+~~~
+(Terminal 5, Docker)
+docker exec -it [docker name] bash
+(docker nameはdocker ps -aでNameから起動しているコンテナ名を確認できます。)
 
+rosservice call /hdl_graph_slam/save_map "resolution: 0.05
+destination: '//root/catkin_ws/src/map.pcd'"
+~~~
+
+上記のコマンドを入力すると、下記のようにrvizで実行している様子が確認できます。
 <img src="imgs/top.png" height="256pix" /> <img src="imgs/birds.png" height="256pix" />
 
-以下のコマンドで、生成したマップを保存できます:
-```bash
-rosservice call /hdl_graph_slam/save_map "resolution: 0.05
-destination: '/full_path_directory/map.pcd'"
-```
 
-### 3.2 例2 Outdoor
+
+### 3.2 屋外環境 
 Bag file (recorded in an outdoor environment):
 - [hdl_400.bag.tar.gz](http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz) (raw data, about 900MB)
 
-```bash
+1. roscore
+~~~
+(Terminal 1, Local環境)
+roscore
+~~~
+
+2. Dockerコンテナの起動
+~~~
+(Terminal 2、Docker)
+cd hdl_graph_slam/docker
+./run.sh
+
 rosparam set use_sim_time true
 roslaunch hdl_graph_slam hdl_graph_slam_400.launch
-```
+~~~
 
-```bash
+3. rviz
+~~~
+(Terminal 3, Local環境)
 roscd hdl_graph_slam/rviz
 rviz -d hdl_graph_slam.rviz
-```
+~~~
 
-```bash
+4. rosbag再生
+~~~
+(Terminal 4, Local環境)
+wget http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz
+tar -zxvf hdl_400.bag.tar.gz
 rosbag play --clock hdl_400.bag
-```
+~~~
 
+上記のコマンドを入力すると、以下のように表示されます。
+地図保存の方法「屋内環境」のときに使用したコマンドと同様にできます。
 <img src="imgs/hdl_400_points.png" height="256pix" /> <img src="imgs/hdl_400_graph.png" height="256pix" />
+
 
 ### 3.3 GPSを使用した例
 Ford Campus Vision and Lidar Data Set [\[URL\]](http://robots.engin.umich.edu/SoftwareData/Ford)
