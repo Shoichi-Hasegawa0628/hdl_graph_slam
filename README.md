@@ -75,9 +75,10 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
  　- PCD形式で生成した地図を保存する。
 
 ## 2. 環境構築 
-### 2.1 動作保証環境
+### 2.1 動作環境
 ***hdl_graph_slam***は,
-Docker(hdl_graph_slma用)とLocal環境のROS(rviz用)で動作させることを想定しています。(Local環境のみでも動作は可能です。)
+Docker(hdl_graph_slma用)とLocal環境のROS(rviz用)で動作させることを想定しています。  
+(Local環境のみでも動作は可能です。)
 
 | Component | Requirement |
 | :-- | :-- |
@@ -179,12 +180,12 @@ cd hdl_graph_slam/docker
 roslaunch hdl_graph_slam hdl_graph_slam_400.launch
 ~~~
 
-Rvizでhdl_graph_slamが起動していることを確認できます。
+Rvizでhdl_graph_slamが起動していることを確認できます。  
 ![hdl_graph_slam](https://user-images.githubusercontent.com/31344317/98347836-4fed5a00-205b-11eb-931c-158f6cd056bf.gif)
 
 
 ## 3. システム利用手順
-hdl_graph_slamを利用するために、場面に応じたrosbagファイルをいくつか提供しています。
+hdl_graph_slamを利用するために、場面に応じたrosbagファイルをいくつか提供しています。  
 ご参考にください。
 
 ### 3.1 例1 屋内環境
@@ -236,10 +237,10 @@ docker exec -it [docker name] bash
 (docker nameはdocker ps -aでNameから起動しているコンテナ名を確認できます。)
 
 rosservice call /hdl_graph_slam/save_map "resolution: 0.05
-destination: '//root/catkin_ws/src/map.pcd'"
+destination: '/root/catkin_ws/src/map.pcd'"
 ~~~
 
-上記のコマンドを入力すると、下記のようにrvizで実行している様子が確認できます。
+上記のコマンドを入力すると、下記のようにrvizで実行している様子が確認できます。  
 <img src="imgs/top.png" height="256pix" /> <img src="imgs/birds.png" height="256pix" />
 
 
@@ -279,8 +280,8 @@ tar -zxvf hdl_400.bag.tar.gz
 rosbag play --clock hdl_400.bag
 ~~~
 
-上記のコマンドを入力すると、以下のように表示されます。
-地図保存の方法「屋内環境」のときに使用したコマンドと同様にできます。
+上記のコマンドを入力すると、以下のように表示されます。  
+地図保存の方法「屋内環境」のときに使用したコマンドと同様にできます。  
 <img src="imgs/hdl_400_points.png" height="256pix" /> <img src="imgs/hdl_400_graph.png" height="256pix" />
 
 
@@ -314,12 +315,13 @@ rosrun hdl_graph_slam bag_player.py dataset-2.bag
 マッピングの品質はパラメータの設定に大きく依存します。特にスキャンマッチングパラメータは結果に大きな影響を与えます。以下の手順でパラメータをチューニングしてください。
 
 - ***registration_method***
-  **[updated] 簡単には、ほとんどの場合はFAST_GICPを使用し、処理速度が重要な場合はFAST_VGICPかNDT_OMPを使うということです** このパラメータにより、オドメトリ推定とループ検出に使う登録方法を変更することができます。PCL1.7 (ROS kinetic)以前のGICPには、初期推測の処理にバグがあることに注意してください。**ROS kinecticまたはそれ以前のバージョンをお使いの場合は、GICPを使用しないでください**
+  **[updated]  
+簡単には、ほとんどの場合はFAST_GICPを使用し、処理速度が重要な場合はFAST_VGICPかNDT_OMPを使うということです** このパラメータにより、オドメトリ推定とループ検出に使う登録方法を変更することができます。PCL1.7 (ROS kinetic)以前のGICPには、初期推測の処理にバグがあることに注意してください。**ROS kinecticまたはそれ以前のバージョンをお使いの場合は、GICPを使用しないでください**
   
-- ***ndt_resolution***
+- ***ndt_resolution***  
 このパラメータはNDTのボクセルサイズを決定します。通常、屋外環境では大きな値が適しています(屋内では0.5 - 2.0 [m]、屋外では 2.0 - 10.0 [m])。NDTまたはNDT_OMPを選択した場合は、このパラメータを微調整して、良好なオドメトリ推定結果を得ることができます。
 
-- ***他のパラメータ***
+- ***他のパラメータ***  
 設定可能なパラメータは、全て起動ファイルで確認できます。起動ファイルのテンプレート（屋内用hdl_graph_slam_501.launch、屋外用hdl_graph_slam_400.launch）をコピーして、起動ファイル内のパラメータを微調整してアプリケーションに適応させることができます。
 
 
