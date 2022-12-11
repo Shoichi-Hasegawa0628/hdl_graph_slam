@@ -104,18 +104,19 @@ ROSのインストールは下記を参照してください。
 
 
 ### 2.2 依存関係
-***hdl_graph_slam***は以下のライブラリとROSパッケージが必要です。
+***hdl_graph_slam***は以下のライブラリとROSパッケージが必要です。  
+(下記のバージョンは, 動作確認時のバージョンになります。)  
 
 ライブラリ
 - OpenMP
 - PCL
-- g2o
+- g2o (ros-noetic-libg2o == 2020.5.3-1focal.20210423.222732)
 - suitesparse
 
 ROSパッケージ
-- geodesy
-- nmea_msgs
-- pcl_ros
+- geodesy (ros-noetic-geodesy == 0.5.6-1focal.20221124.033544)
+- nmea_msgs (ros-noetic-pcl-ros == 1.7.4-1focal.20221124.043642)
+- pcl_ros (ros-noetic-nmea-msgs == 1.1.0-1focal.20220926.183540)
 - [ndt_omp](https://github.com/koide3/ndt_omp)
 - [fast_gicp](https://github.com/SMRT-AIST/fast_gicp)
 
