@@ -4,12 +4,27 @@
 
 *目次*  
 1. [システム概要](#1-システム概要)  
+　1.1 [システム構成](#11-システム構成)  
+　1.2 [ROSの設定](#12-rosの設定)  
   
 2. [環境構築](#2-環境構築)  
+　2.1 [動作環境](#21-動作環境)  
+　2.2 [依存関係](#22-依存関係)  
+　2.3 [セットアップ](#23-セットアップ)  
+　2.4 [実行手順](#24-実行手順)  
   
 3. [システム利用手順](#3-システム利用手順)  
-  
+　3.1 [例1 Indoor](#31-例1-indoor)  
+　3.2 [例2 Outdoor](#32-例2-outdoor)  
+　3.3 [GPSを利用した例](#33-gpsを使用した例)  
+　3.4 [自身のシステムでhdl_graph_slamを使用する場合](#34-自身のシステムでhdl-graph-slamを使用する場合)  
+　3.5 [パラメータのチューニングについて](#35-パラメータのチューニングについて)  
+ 
 4. [関連リンク](#4-関連リンク)  
+　4.1 [ライセンス](#41-ライセンス)  
+　4.2 [関連パッケージ](#42-関連パッケージ)  
+　4.3 [関連論文](#43-関連論文)  
+　4.4 [連絡先](#44-連絡先)
 
 
 ## 1. システム概要
@@ -61,7 +76,7 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 
 この制約により、姿勢ノードの床面 (RANSACで検出)が同じになるようにグラフを最適化します。これは広い平坦な屋内環境において、スキャンマッチングの累積回転誤差を補償するために設計されています。
 
-#### 1.1.3 ROS
+### 1.2 ROSの設定
 - ROSパラメータ  
 設定可能なROSパラメータは、*launch/hdl_graph_slam.launch*にrosparamsとしてリストアップされています。
 
@@ -186,7 +201,7 @@ Rvizでhdl_graph_slamが起動していることを確認できます。
 hdl_graph_slamを利用するために、場面に応じたrosbagファイルをいくつか提供しています。  
 ご参考にください。
 
-### 3.1 例1 屋内環境
+### 3.1 例1 Indoor  
 Rosbag file (recorded in a small room):
 
 - [hdl_501.bag.tar.gz](http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_501.bag.tar.gz) (raw data, 344MB)
@@ -244,7 +259,7 @@ destination: '/root/catkin_ws/src/map.pcd'
 
 
 
-### 3.2 屋外環境 
+### 3.2 例2 Outdoor  
 Bag file (recorded in an outdoor environment):
 - [hdl_400.bag.tar.gz](http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz) (raw data, about 900MB)
 
