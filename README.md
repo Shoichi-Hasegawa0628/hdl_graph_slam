@@ -139,7 +139,7 @@ sudo pip install ProgressBar2
 #### 実行手順
 1. 好きなフォルダにこのリポジトリをクローン
 ~~~
-git clone **
+git clone https://github.com/koide3/hdl_graph_slam
 ~~~
 
 2. Dockerイメージのビルド
