@@ -96,7 +96,7 @@ Docker(hdl_graph_slma用)とLocal環境のROS(rviz用)で動作させること�
 | Component | Requirement |
 | :-- | :-- |
 | OS | Ubuntu 18.04LTS, 20.04LTS |
-| Python | Versions 3.8 |
+| Python | Versions 2.8, 3.8 |
 
 ROSのインストールは下記を参照してください。
 - [Melodic (Ubuntu18.04LTSの場合)](https://wiki.ros.org/melodic)
