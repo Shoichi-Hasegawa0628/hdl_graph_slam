@@ -108,17 +108,28 @@ ROSのインストールは下記を参照してください。
 (下記のバージョンは, 動作確認時のバージョンになります。)  
 
 ライブラリ
-- OpenMP
-- PCL
-- g2o (ros-noetic-libg2o == 2020.5.3-1focal.20210423.222732)
-- suitesparse
+- ***OpenMP***
+
+- ***PCL***
+
+- ***g2o***  
+(ros-noetic-libg2o == 2020.5.3-1focal.20210423.222732)  
+
+- ***suitesparse***
 
 ROSパッケージ
-- geodesy (ros-noetic-geodesy == 0.5.6-1focal.20221124.033544)
-- nmea_msgs (ros-noetic-pcl-ros == 1.7.4-1focal.20221124.043642)
-- pcl_ros (ros-noetic-nmea-msgs == 1.1.0-1focal.20220926.183540)
-- [ndt_omp](https://github.com/koide3/ndt_omp)
-- [fast_gicp](https://github.com/SMRT-AIST/fast_gicp)
+- ***geodesy***  
+(ros-noetic-geodesy == 0.5.6-1focal.20221124.033544)  
+
+- ***nmea_msgs***  
+(ros-noetic-pcl-ros == 1.7.4-1focal.20221124.043642)  
+
+- ***pcl_ros***  
+(ros-noetic-nmea-msgs == 1.1.0-1focal.20220926.183540)  
+
+- [***ndt_omp***](https://github.com/koide3/ndt_omp)  
+
+- [***fast_gicp***](https://github.com/SMRT-AIST/fast_gicp)  
 
 
 ### 2.3 セットアップ
