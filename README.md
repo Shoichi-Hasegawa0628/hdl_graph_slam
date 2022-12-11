@@ -151,13 +151,13 @@ cd hdl_graph_slam/docker
 
 3. roscoreの起動
 ~~~
-# Local PC (Terminal 1)
+# Local PC (Terminal 1, Local環境)
 roscore
 ~~~
 
 4. Local環境でrvizの起動
 ~~~
-# Local PC (Terminal 2、Local環境)
+# Local PC (Terminal 2, Local環境)
 rosparam set use_sim_time true
 
 cd hdl_graph_slam/rviz  
@@ -166,7 +166,7 @@ rviz -d hdl_graph_slam.rviz
 
 5. rosbagの再生
 ~~~
-# Local PC (Terminal 3、Local環境)
+# Local PC (Terminal 3, Local環境)
 wget http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz
 tar -zxvf hdl_400.bag.tar.gz
 rosbag play --clock hdl_400.bag
@@ -202,7 +202,7 @@ roscore
 
 2. Dockerコンテナの起動
 ~~~
-(Terminal 2、Docker)
+(Terminal 2, Docker)
 cd hdl_graph_slam/docker
 ./run.sh
 
@@ -235,9 +235,10 @@ root権限でmapは保存されるため、chmod 777 ./map.pcdで権限を変更
 (Terminal 5, Docker)
 docker exec -it [docker name] bash
 (docker nameはdocker ps -aでNameから起動しているコンテナ名を確認できます。)
+source /opt/ros/noetic/setup.bash
 
 rosservice call /hdl_graph_slam/save_map "resolution: 0.05
-destination: '/root/catkin_ws/src/map.pcd'"
+destination: '/root/catkin_ws/src/map.pcd'
 ~~~
 
 上記のコマンドを入力すると、下記のようにrvizで実行している様子が確認できます。  
@@ -257,7 +258,7 @@ roscore
 
 2. Dockerコンテナの起動
 ~~~
-(Terminal 2、Docker)
+(Terminal 2, Docker)
 cd hdl_graph_slam/docker
 ./run.sh
 
