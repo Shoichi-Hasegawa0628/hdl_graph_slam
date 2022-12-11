@@ -32,7 +32,7 @@
 
 <img src="imgs/nodelets.png" width="712pix" />
 
-## 1.1.2 Constraints (Edges)
+#### 1.1.2 Constraints (Edges)
 roslaunchファイルのparamsを変更することで、各制約の有効/無効を切り替えられるほか、各制約の重み(\*_stddev)とロバストカーネル(\*_robust_kernel)を変更することも可能です。
 
 - ***Odometry***
@@ -61,7 +61,7 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 
 この制約により、姿勢ノードの床面 (RANSACで検出)が同じになるようにグラフを最適化します。これは広い平坦な屋内環境において、スキャンマッチングの累積回転誤差を補償するために設計されています。
 
-### 1.1.3 ROS
+#### 1.1.3 ROS
 - ROSパラメータ  
 設定可能なROSパラメータは、*launch/hdl_graph_slam.launch*にrosparamsとしてリストアップされています。
 
