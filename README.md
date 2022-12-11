@@ -76,8 +76,52 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 
 ## 2. 環境構築 
 ### 2.1 動作保証環境
-***hdl_graph_slam***はDocker，Local PCでの2種類の環境構築を提供しています。
+***hdl_graph_slam***は,
+- Docker(hdl_graph_slma用)とLocal環境のROS (rviz用)
+- Local PC
+での2種類の環境構築を提供しています。
+
 #### Dockerでの環境構築
+1. 好きなフォルダにこのリポジトリをクローン
+~~~
+git clone **
+~~~
+
+2. Dockerイメージのビルド
+~~~ 
+cd hdl_graph_slam/docker  
+./build.sh
+~~~
+
+3. Dockerコンテナを起動する
+~~~
+# Local PC (Terminal 1)
+roscore
+~~~
+
+~~~
+# Local PC (Terminal 2)
+rosparam set use_sim_time true
+
+cd hdl_graph_slam/rviz  
+rviz -d hdl_graph_slam.rviz
+~~~
+
+~~~
+# Local PC (Terminal 3)
+wget http://www.aisl.cs.tut.ac.jp/databases/hdl_graph_slam/hdl_400.bag.tar.gz
+tar -zxvf hdl_400.bag.tar.gz
+rosbag play --clock hdl_400.bag
+~~~
+
+~~~
+# Local PC (Terminal 4, Docker)
+cd hdl_graph_slam/docker
+./run.sh
+roslaunch hdl_graph_slam hdl_graph_slam_400.launch
+~~~
+
+![hdl_graph_slam](https://user-images.githubusercontent.com/31344317/98347836-4fed5a00-205b-11eb-931c-158f6cd056bf.gif)
 
 
 #### Local PCでの環境構築 (動作確認済み)
