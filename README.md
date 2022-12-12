@@ -82,10 +82,10 @@ IMUに信頼性の高い磁気姿勢センサーが搭載されている場合�
 
 - ROSサービス  
 以下が設定されています。
-　- */hdl_graph_slam/dump*  (hdl_graph_slam/DumpGraph)
- 　- フォルダに内部データ(point clouds, floor coeffs, odoms, and pose graph)を全て保存する。
-　- */hdl_graph_slam/save_map*  (hdl_graph_slam/SaveMap)
- 　- PCD形式で生成した地図を保存する。
+ - /hdl_graph_slam/dump  (hdl_graph_slam/DumpGraph)
+ フォルダに内部データ(point clouds, floor coeffs, odoms, and pose graph)を全て保存する。
+ - */hdl_graph_slam/save_map*  (hdl_graph_slam/SaveMap)
+ PCD形式で生成した地図を保存する。
 
 ## 2. 環境構築 
 ### 2.1 動作環境
