@@ -314,13 +314,48 @@ rosbag play --clock hdl_400.bag
 ### 3.3 GPSを使用した例
 Ford Campus Vision and Lidar Data Set [\[URL\]](http://robots.engin.umich.edu/SoftwareData/Ford)
 
-以下のスクリプトは、Ford Lidar Datasetをrosbagに変換して再生します。この例では、***hdl_graph_slam***がGPSデータを利用して、ポーズグラフを補正しています。
+1. データセットのダウンロードし，展開． (dataset-1，datset-2のいずれか)
+~~~
+# dataset-1のとき
+wget https://s3.us-east-2.amazonaws.com/ford.perl.engin.umich.edu/dataset-1.tar.gz
+tar -zxvf dataset-1.tar.gz
 
-```bash
-cd IJRR-Dataset-2
-rosrun hdl_graph_slam ford2bag.py dataset-2.bag
-rosrun hdl_graph_slam bag_player.py dataset-2.bag
-```
+# dataset-2のとき
+wget https://s3.us-east-2.amazonaws.com/ford.perl.engin.umich.edu/dataset-2.tar.gz
+tar -zxvf dataset-2.tar.gz
+~~~
+
+2. データセットをrosbagに変換
+(dataset-2のときは，1を2に変更する)
+~~~
+cd IJRR-Dataset-1
+
+# dataset-1には，Gps.logがあり，GPS.logに名前を変更する．
+
+rosrun hdl_graph_slam ford2bag.py dataset-1.bag
+~~~
+
+3. rvizの起動
+~~~
+(Terminal 1, Local環境)
+rosparam set use_sim_time true
+rviz -d hdl_graph_slam.rviz
+~~~
+
+4. hdl_graph_slamの起動
+~~~
+(Terminal 2，Docker)
+cd hdl_graph_slam/docker
+./run.sh
+
+roslaunch hdl_graph_slam hdl_graph_slam.launch
+~~~
+
+5. rosbagの再生
+~~~
+(Terminal 3, Local環境)
+rosrun hdl_graph_slam bag_player.py dataset-1.bag
+~~~
 
 <img src="imgs/ford1.png" height="200pix"/> <img src="imgs/ford2.png" height="200pix"/> <img src="imgs/ford3.png" height="200pix"/>
 
